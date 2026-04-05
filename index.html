@@ -268,7 +268,7 @@
     <div id="start-screen">
         <h1 class="main-title">Универсален Математически Тренажор</h1>
         
-        <img src="MT.jpg" alt="Математически тренажор" class="start-image">
+        <img src="MT.png" alt="Математически тренажор" class="start-image">
         
         <div class="credits">
             Идея и педагогически избори: Валя Витковска<br>
@@ -548,15 +548,12 @@
         if (activeInputIndex < 0 || activeInputIndex >= currentInputs.length) return;
         
         let inp = currentInputs[activeInputIndex];
-        // Взимаме максималната дължина на полето (по подразбиране 1)
         let maxL = parseInt(inp.getAttribute('maxlength') || 1);
         
         if (val === 'back') {
-            // Ако има въведени символи, трием последния
             if (inp.value.length > 0) {
                 inp.value = inp.value.slice(0, -1);
             } 
-            // Ако полето вече е празно, скачаме крачка назад
             else if (activeInputIndex > 0) {
                 currentInputs[activeInputIndex - 1].focus();
             }
@@ -570,18 +567,11 @@
             if (activeInputIndex + 1 < currentInputs.length) currentInputs[activeInputIndex + 1].focus();
             else inp.focus();
         } else {
-            // Въвеждане на цифра
             if (inp.value.length >= maxL) {
-                // Ако полето вече е достигнало лимита си, презаписваме с новата цифра
                 inp.value = val;
             } else {
-                // Иначе добавяме цифрата (така "1" става "10")
                 inp.value += val;
             }
-            
-            // Проверяваме ДАЛИ сме достигнали максималния лимит на полето.
-            // Само ако сме го достигнали (напр. сме въвели втората цифра при изваждане), 
-            // прескачаме автоматично към следващото поле.
             if (inp.value.length === maxL) {
                 if (activeInputIndex + 1 < currentInputs.length) currentInputs[activeInputIndex + 1].focus();
                 else inp.focus(); 
@@ -589,21 +579,15 @@
         }
     }
 
-    // --- УМНА КЛАВИАТУРНА НАВИГАЦИЯ (за физическа и виртуална) ---
+    // --- УМНА КЛАВИАТУРНА НАВИГАЦИЯ ---
     function applyInputLogic(inputsArray) {
         currentInputs = inputsArray;
         activeInputIndex = inputsArray.length > 0 ? 0 : -1;
 
         inputsArray.forEach((inp, idx) => {
-            // Блокира появата на системната клавиатура на телефони!
             inp.setAttribute('inputmode', 'none');
+            inp.addEventListener('focus', () => { activeInputIndex = idx; });
 
-            // Следим кое поле е активно
-            inp.addEventListener('focus', () => {
-                activeInputIndex = idx;
-            });
-
-            // За работа с физическа клавиатура (лаптоп)
             inp.addEventListener('input', function() {
                 this.value = this.value.replace(/[^0-9]/g, '');
                 if (this.value.length === parseInt(this.getAttribute('maxlength') || 1)) {
@@ -633,7 +617,6 @@
         });
         
         if (inputsArray.length > 0) {
-            // Автоматичен фокус на първото поле при стартиране
             setTimeout(() => inputsArray[0].focus(), 100);
         }
     }
