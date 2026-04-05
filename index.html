@@ -200,6 +200,43 @@
             opacity: 1 !important; background-color: #e74c3c; border-color: #c0392b; border-style: solid; transform: scale(1.2);
         }
 
+        /* --- ВИРТУАЛНА КЛАВИАТУРА ЗА МОБИЛНИ --- */
+        .virtual-keyboard {
+            display: none; 
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            max-width: 350px;
+            width: 100%;
+            margin: 20px auto 0 auto;
+            padding: 15px;
+            background: #ecf0f1;
+            border-radius: 12px;
+            border: 2px solid #bdc3c7;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            box-sizing: border-box;
+        }
+        .vk-btn {
+            padding: 15px 0;
+            font-size: 26px;
+            font-weight: bold;
+            color: #2c3e50;
+            background: #fff;
+            border: 1px solid #bdc3c7;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.1s;
+            box-shadow: 0 3px 5px rgba(0,0,0,0.05);
+            font-family: inherit;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .vk-btn:active { transform: translateY(2px); box-shadow: none; background: #f8f9fa; }
+        .vk-btn.action { background: #dfe6e9; color: #34495e; font-size: 22px;}
+        .vk-btn.enter { background: #3498db; color: white; border-color: #2980b9; font-size: 20px; grid-column: span 2;}
+        .vk-btn.enter:active { background: #2980b9; }
+
         /* --- ОБРАТНА ВРЪЗКА И АНИМАЦИИ --- */
         #feedback { 
             text-align: center; margin-top: 20px; font-weight: bold; font-size: 22px; 
@@ -217,6 +254,8 @@
             .main-input { width: 120px; font-size: 16px; }
             .container { padding: 20px 15px; }
             .input-panels { flex-direction: column; }
+            .virtual-keyboard { gap: 6px; padding: 10px; }
+            .vk-btn { padding: 12px 0; font-size: 22px; }
         }
         
         .no-select { user-select: none; -webkit-user-select: none; }
@@ -229,7 +268,7 @@
     <div id="start-screen">
         <h1 class="main-title">Универсален Математически Тренажор</h1>
         
-        <img src="MT.png" alt="Математически тренажор" class="start-image">
+        <img src="MT.jpg" alt="Математически тренажор" class="start-image">
         
         <div class="credits">
             Идея и педагогически избори: Валя Витковска<br>
@@ -242,7 +281,7 @@
             2. Можете да генерирате случайни числа или да въведете свои собствени.<br>
             3. Решавайте задачата стъпка по стъпка. Всички основни полета се проверяват.<br>
             4. Малките полета (с пунктирана линия) са помощни (чернова) – попълването им не е задължително за крайната оценка.<br>
-            5. Използвайте клавиатурата: курсорът автоматично следва логиката на пресмятане! Можете да се движите и със <strong>стрелките наляво/надясно</strong> или с <strong>Enter</strong> и <strong>Backspace</strong>.
+            5. Използвайте вградената екранна клавиатура (супер удобна за телефон/таблет) или физическата на вашия лаптоп. Курсорът автоматично следва логиката на пресмятане!
         </div>
         
         <h2 class="subtitle">Избери действие за упражнение:</h2>
@@ -301,9 +340,9 @@
             <div class="panel">
                 <h3>✍️ Твоя задача</h3>
                 <div class="panel-row">
-                    <input type="text" id="num1" class="main-input" placeholder="Число 1" autocomplete="off" maxlength="9">
+                    <input type="text" id="num1" class="main-input" placeholder="Число 1" autocomplete="off" maxlength="9" inputmode="numeric">
                     <span id="op-input-symbol" style="font-size: 24px; font-weight: bold;">+</span>
-                    <input type="text" id="num2" class="main-input" placeholder="Число 2" autocomplete="off" maxlength="9">
+                    <input type="text" id="num2" class="main-input" placeholder="Число 2" autocomplete="off" maxlength="9" inputmode="numeric">
                 </div>
                 <button class="btn btn-build" onclick="buildTask()">Създай задача</button>
             </div>
@@ -317,6 +356,27 @@
             <div id="board" class="math-board no-select"></div>
         </div>
         
+        <div id="virtual-keyboard" class="virtual-keyboard">
+            <button class="vk-btn" onmousedown="event.preventDefault()" onclick="vKey('1')">1</button>
+            <button class="vk-btn" onmousedown="event.preventDefault()" onclick="vKey('2')">2</button>
+            <button class="vk-btn" onmousedown="event.preventDefault()" onclick="vKey('3')">3</button>
+            
+            <button class="vk-btn" onmousedown="event.preventDefault()" onclick="vKey('4')">4</button>
+            <button class="vk-btn" onmousedown="event.preventDefault()" onclick="vKey('5')">5</button>
+            <button class="vk-btn" onmousedown="event.preventDefault()" onclick="vKey('6')">6</button>
+            
+            <button class="vk-btn" onmousedown="event.preventDefault()" onclick="vKey('7')">7</button>
+            <button class="vk-btn" onmousedown="event.preventDefault()" onclick="vKey('8')">8</button>
+            <button class="vk-btn" onmousedown="event.preventDefault()" onclick="vKey('9')">9</button>
+            
+            <button class="vk-btn action" onmousedown="event.preventDefault()" onclick="vKey('left')">⬅</button>
+            <button class="vk-btn" onmousedown="event.preventDefault()" onclick="vKey('0')">0</button>
+            <button class="vk-btn action" onmousedown="event.preventDefault()" onclick="vKey('right')">➡</button>
+            
+            <button class="vk-btn action" onmousedown="event.preventDefault()" onclick="vKey('back')">⌫ Изтрий</button>
+            <button class="vk-btn enter" onmousedown="event.preventDefault()" onclick="vKey('enter')">↵ Напред</button>
+        </div>
+
         <button class="btn btn-check" id="checkBtn" onclick="checkAnswers()">Провери решението ✔️</button>
         <div id="feedback"></div>
     </div>
@@ -330,6 +390,10 @@
 
     const successMsgs = ["Отлично! Всичко е вярно! 🌟", "Справи се блестящо! 🚀", "Шампионско решаване! 🏆"];
     const errorMsgs = ["Има малка грешка. Провери внимателно! 💡", "Опитай отново, ще се справиш! 💪", "Открий къде се крие грешката! 🕵️"];
+
+    // Променливи за виртуалната клавиатура
+    let currentInputs = [];
+    let activeInputIndex = -1;
 
     window.onload = () => {
         showMenu();
@@ -357,19 +421,19 @@
         const opSym = document.getElementById('op-symbol');
         const opInput = document.getElementById('op-input-symbol');
 
-        const draftNote = `<span class="draft-note">* Помощните полета с пунктир са чернова и не участват в оценката. Можете да ги прескачате със стрелките на клавиатурата.</span>`;
+        const draftNote = `<span class="draft-note">* Помощните полета с пунктир са чернова и не участват в оценката. Можете да ги прескачате със стрелките.</span>`;
 
         if (mode === 'add') {
             hint.innerHTML = `<strong>💡 Събиране:</strong> Курсорът ще те води от дясно наляво: Резултат -> Поле "наум" -> Резултат.` + draftNote;
             opSym.innerText = "+"; opInput.innerText = "+";
         } else if (mode === 'sub') {
-            hint.innerHTML = `<strong>💡 Изваждане:</strong> Точките за заемане се виждат при посочване с мишката. Курсорът води от дясно наляво.` + draftNote;
+            hint.innerHTML = `<strong>💡 Изваждане:</strong> Точките за заемане се виждат при посочване. Курсорът води от дясно наляво.` + draftNote;
             opSym.innerText = "−"; opInput.innerText = "−";
         } else if (mode === 'mul') {
             hint.innerHTML = `<strong>💡 Умножение:</strong> Решавай внимателно ред по ред, като започнеш от най-дясната цифра на множителя.`;
             opSym.innerText = "."; opInput.innerText = ".";
         } else if (mode === 'div') {
-            hint.innerHTML = `<strong>💡 Деление:</strong> Точките за маркиране и заемане се показват леко при посочване с мишката! Можете да маркирате делимото, остатъка и свалените цифри.`;
+            hint.innerHTML = `<strong>💡 Деление:</strong> Точките за маркиране и заемане се показват леко при посочване! Можете да маркирате делимото, остатъка и свалените цифри.`;
             opSym.innerText = ":"; opInput.innerText = ":";
         }
         
@@ -396,9 +460,12 @@
         document.getElementById('num1').value = ''; 
         document.getElementById('num2').value = '';
         document.getElementById('board').innerHTML = ''; 
+        document.getElementById('virtual-keyboard').style.display = 'none'; // Скриване на клавиатурата
         document.getElementById('checkBtn').style.display = 'none';
         document.getElementById('feedback').innerHTML = '';
         document.getElementById('feedback').style.backgroundColor = 'transparent';
+        currentInputs = [];
+        activeInputIndex = -1;
     }
 
     function generateRandom() {
@@ -451,6 +518,7 @@
         
         board.innerHTML = '';
         document.getElementById('checkBtn').style.display = 'none';
+        document.getElementById('virtual-keyboard').style.display = 'none';
         showFeedback('', '');
 
         if (!str1 || !str2) return showFeedback('⚠️ Моля, въведете и двете числа.', 'warn');
@@ -467,6 +535,7 @@
         }
 
         document.getElementById('checkBtn').style.display = 'block';
+        document.getElementById('virtual-keyboard').style.display = 'grid'; // Показваме клавиатурата
 
         if (currentMode === 'add') generateAddBoard(str1, str2, board);
         else if (currentMode === 'sub') generateSubBoard(str1, str2, board);
@@ -474,9 +543,48 @@
         else if (currentMode === 'div') generateDivBoard(str1, str2, board);
     }
 
-    // --- УМНА КЛАВИАТУРНА НАВИГАЦИЯ ---
+    // --- ЛОГИКА ЗА ВИРТУАЛНА КЛАВИАТУРА ---
+    function vKey(val) {
+        if (activeInputIndex < 0 || activeInputIndex >= currentInputs.length) return;
+        
+        let inp = currentInputs[activeInputIndex];
+        
+        if (val === 'back') {
+            inp.value = '';
+            if (activeInputIndex > 0) currentInputs[activeInputIndex - 1].focus();
+            else inp.focus(); 
+        } else if (val === 'enter') {
+            if (activeInputIndex + 1 < currentInputs.length) currentInputs[activeInputIndex + 1].focus();
+            else { inp.focus(); checkAnswers(); }
+        } else if (val === 'left') {
+            if (activeInputIndex > 0) currentInputs[activeInputIndex - 1].focus();
+            else inp.focus();
+        } else if (val === 'right') {
+            if (activeInputIndex + 1 < currentInputs.length) currentInputs[activeInputIndex + 1].focus();
+            else inp.focus();
+        } else {
+            // Въвеждане на цифра
+            inp.value = val;
+            if (activeInputIndex + 1 < currentInputs.length) currentInputs[activeInputIndex + 1].focus();
+            else inp.focus(); 
+        }
+    }
+
+    // --- УМНА КЛАВИАТУРНА НАВИГАЦИЯ (за физическа и виртуална) ---
     function applyInputLogic(inputsArray) {
+        currentInputs = inputsArray;
+        activeInputIndex = inputsArray.length > 0 ? 0 : -1;
+
         inputsArray.forEach((inp, idx) => {
+            // КЛЮЧОВО: Блокира появата на системната клавиатура на телефони!
+            inp.setAttribute('inputmode', 'none');
+
+            // Следим кое поле е активно
+            inp.addEventListener('focus', () => {
+                activeInputIndex = idx;
+            });
+
+            // За работа с физическа клавиатура (лаптоп)
             inp.addEventListener('input', function() {
                 this.value = this.value.replace(/[^0-9]/g, '');
                 if (this.value.length === parseInt(this.getAttribute('maxlength') || 1)) {
@@ -506,6 +614,7 @@
         });
         
         if (inputsArray.length > 0) {
+            // Автоматичен фокус на първото поле при стартиране
             setTimeout(() => inputsArray[0].focus(), 100);
         }
     }
@@ -756,12 +865,10 @@
             let rRow = '<div class="grid-row">';
             for(let c=0; c<totalCols; c++) {
                 if (c >= startR && c <= block.rem.endCol + offset) {
-                    // ГАРАНТИРАНО ИМА ТОЧКА ЗА ЗАЕМАНЕ
                     rRow += createDivCell('in', '', block.rem.val[c - startR], '#2c3e50', true, `div-r-${b}`);
                 } else {
                     let bringMatch = block.brings.findIndex(br => br.col + offset === c);
                     if (bringMatch !== -1) {
-                        // ГАРАНТИРАНО ИМА ТОЧКА ЗА МАРКИРАНЕ
                         rRow += createDivCell('in', '', block.brings[bringMatch].val, '#2c3e50', true, `div-bring-${b}-${bringMatch}`);
                     } else {
                         rRow += createDivCell('empty');
