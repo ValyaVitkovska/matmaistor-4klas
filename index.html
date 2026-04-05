@@ -548,11 +548,18 @@
         if (activeInputIndex < 0 || activeInputIndex >= currentInputs.length) return;
         
         let inp = currentInputs[activeInputIndex];
+        // Взимаме максималната дължина на полето (по подразбиране 1)
+        let maxL = parseInt(inp.getAttribute('maxlength') || 1);
         
         if (val === 'back') {
-            inp.value = '';
-            if (activeInputIndex > 0) currentInputs[activeInputIndex - 1].focus();
-            else inp.focus(); 
+            // Ако има въведени символи, трием последния
+            if (inp.value.length > 0) {
+                inp.value = inp.value.slice(0, -1);
+            } 
+            // Ако полето вече е празно, скачаме крачка назад
+            else if (activeInputIndex > 0) {
+                currentInputs[activeInputIndex - 1].focus();
+            }
         } else if (val === 'enter') {
             if (activeInputIndex + 1 < currentInputs.length) currentInputs[activeInputIndex + 1].focus();
             else { inp.focus(); checkAnswers(); }
@@ -564,9 +571,21 @@
             else inp.focus();
         } else {
             // Въвеждане на цифра
-            inp.value = val;
-            if (activeInputIndex + 1 < currentInputs.length) currentInputs[activeInputIndex + 1].focus();
-            else inp.focus(); 
+            if (inp.value.length >= maxL) {
+                // Ако полето вече е достигнало лимита си, презаписваме с новата цифра
+                inp.value = val;
+            } else {
+                // Иначе добавяме цифрата (така "1" става "10")
+                inp.value += val;
+            }
+            
+            // Проверяваме ДАЛИ сме достигнали максималния лимит на полето.
+            // Само ако сме го достигнали (напр. сме въвели втората цифра при изваждане), 
+            // прескачаме автоматично към следващото поле.
+            if (inp.value.length === maxL) {
+                if (activeInputIndex + 1 < currentInputs.length) currentInputs[activeInputIndex + 1].focus();
+                else inp.focus(); 
+            }
         }
     }
 
@@ -576,7 +595,7 @@
         activeInputIndex = inputsArray.length > 0 ? 0 : -1;
 
         inputsArray.forEach((inp, idx) => {
-            // КЛЮЧОВО: Блокира появата на системната клавиатура на телефони!
+            // Блокира появата на системната клавиатура на телефони!
             inp.setAttribute('inputmode', 'none');
 
             // Следим кое поле е активно
